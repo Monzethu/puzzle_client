@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public GameManager gameManager;
     public LayerMask blockLayer;
 
     private float moveSpeed = 11f;
@@ -53,5 +54,19 @@ public class PlayerController : MonoBehaviour
         Debug.DrawLine(rightStartPoint, endPoint);
         return Physics2D.Linecast(leftStartPoint, endPoint,blockLayer)
             || Physics2D.Linecast(rightStartPoint, endPoint, blockLayer);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "trap")
+        {
+            Debug.Log("aaaaaaaaaa");
+            gameManager.GameOver();
+        }
+        if (collision.gameObject.tag == "finish")
+        {
+            Debug.Log("!!!!!!!!!!");
+            gameManager.GameClear();
+        }
     }
 }
