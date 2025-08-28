@@ -2,21 +2,42 @@ using UnityEngine;
 
 public class ColorWall : MonoBehaviour
 {
-    public string wallColor; //"R","G","B"
+    public enum WallColor { R, G, B }
+    public WallColor wallColor;
+    //public StageDataMono.WallInfo.WallColor wallColor;
 
-    void OnTriggerEnter2D(Collider2D col)
+    private Collider2D col;
+
+    void Start()
     {
-        var pc = col.GetComponent<PlayerColor>();
-        if (pc == null) return;
+        col = GetComponent<Collider2D>();
+    }
 
-        // ‚Á‚Ä‚éF‚Æ•ÇF‚ªˆê’v‚µ‚½‚ç•ª—£”»’è
-        if ((wallColor == "R" && pc.hasR) ||
-            (wallColor == "G" && pc.hasG) ||
-            (wallColor == "B" && pc.hasB))
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        PlayerColor pc = collision.gameObject.GetComponent<PlayerColor>();
+        if (pc != null)
         {
+            // å£ã®è‰²ã¨ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®è‰²ã‚’ãƒã‚§ãƒƒã‚¯
+            bool canPass = false;
+            switch (wallColor)
+            {
+                case WallColor.R: canPass = !pc.hasR; break;
+                case WallColor.G: canPass = !pc.hasG; break;
+                case WallColor.B: canPass = !pc.hasB; break;
+            }
 
-            PlayerManager pm = FindObjectOfType<PlayerManager>();
-            pm.SplitPlayer(pc, wallColor);
+            // é€šã‚Œã‚‹ãªã‚‰ä¸€æ™‚çš„ã«Colliderã‚’ç„¡åŠ¹åŒ–
+            if (canPass)
+            {
+                col.enabled = false;
+                Invoke(nameof(EnableCollider), 0.2f); // ã™ãæˆ»ã™
+            }
         }
+    }
+
+    void EnableCollider()
+    {
+        col.enabled = true;
     }
 }

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class SceneChanger : MonoBehaviour// �J�ڐ�p�X�N���v�g
+public class SceneChanger : MonoBehaviour // シーン切替用スクリプト
 {
     public void ChangeScene(string sceneName)
     {
-        // sceneName�Ɉړ���̃V�[�����������đJ��
+        // sceneNameに指定したシーンに切り替える
         SceneManager.LoadScene(sceneName);
     }
 }

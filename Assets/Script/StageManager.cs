@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using static StageDataMono;
 
-public class StageManager : MonoBehaviour
+public class StageManager : MonoBehaviour// ã‚¹ãƒ†ãƒ¼ã‚¸æƒ…å ±ï¼ˆå£ã®è‰²ã¨ã‹ï¼‰
 {
     public Tilemap wallTilemap;
     public TileBase redWallTile, greenWallTile, blueWallTile;
@@ -12,36 +12,53 @@ public class StageManager : MonoBehaviour
     public GameObject goalPrefab;
     public GameObject playerPrefab;
 
-    public StageData[] stages;
+    public StageDataMono[] stages;
     private int currentStage = 0;
 
     public PlayerManager playerManager;
 
     void Start()
     {
-        LoadStage(currentStage);
+        if (stages.Length > 0)
+        {
+            LoadStage(0); // æœ€åˆã®ã‚¹ãƒ†ãƒ¼ã‚¸ã‚’èª­ã¿è¾¼ã¿
+        }
     }
 
     public void LoadStage(int stageNum)
     {
+        //Debug.Log("wallTilemap: " + wallTilemap);
+        //Debug.Log("playerPrefab: " + playerPrefab);
+        //Debug.Log("goalPrefab: " + goalPrefab);
+        //Debug.Log("lightFragmentPrefab: " + lightFragmentPrefab);
+        //Debug.Log("playerManager: " + playerManager);
+
         ClearStage();
 
-        StageData stage = stages[stageNum];
+        StageDataMono stageMono = stages[stageNum];
+        StageDataMono.StageData stage = stageMono.stageData;
 
-        // 1. •Ç‚ğƒ^ƒCƒ‹ƒ}ƒbƒv‚É”z’u
+        // 1. å£ã‚’Tilemapã«é…ç½®
         foreach (var w in stage.walls)
         {
             TileBase tile = null;
-            switch (w.color)
+            switch (w.wallColor)
             {
-                case "R": tile = redWallTile; break;
-                case "G": tile = greenWallTile; break;
-                case "B": tile = blueWallTile; break;
+                case StageDataMono.WallInfo.WallColor.R:
+                    tile = redWallTile;
+                    break;
+                case StageDataMono.WallInfo.WallColor.G:
+                    tile = greenWallTile;
+                    break;
+                case StageDataMono.WallInfo.WallColor.B:
+                    tile = blueWallTile;
+                    break;
             }
             if (tile != null) wallTilemap.SetTile(w.position, tile);
         }
 
-        // 2. Œõ‚ÌŒ‡•Ğ‚ğ”z’u
+
+        // 2. å…‰ã®ã‹ã‘ã‚‰ã‚’é…ç½®
         foreach (var pos in stage.lightFragments)
         {
             Instantiate(lightFragmentPrefab,
@@ -49,12 +66,12 @@ public class StageManager : MonoBehaviour
                 Quaternion.identity);
         }
 
-        // 3. ƒS[ƒ‹‚ğ”z’u
+        // 3. ã‚´ãƒ¼ãƒ«ã‚’é…ç½®
         Instantiate(goalPrefab,
             wallTilemap.CellToWorld(stage.goalPos) + new Vector3(0.5f, 0.5f, 0),
             Quaternion.identity);
 
-        // 4. ƒvƒŒƒCƒ„[¶¬
+        // 4. ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼é…ç½®
         GameObject playerObj = Instantiate(
             playerPrefab,
             wallTilemap.CellToWorld(stage.playerStartPos) + new Vector3(0.5f, 0.5f, 0),
@@ -63,7 +80,7 @@ public class StageManager : MonoBehaviour
 
         PlayerColor pc = playerObj.GetComponent<PlayerColor>();
 
-        // ƒXƒe[ƒWƒf[ƒ^‚Ì‰ŠúF‚ğ”½‰f
+        // ã‚¹ãƒ†ãƒ¼ã‚¸ãƒ‡ãƒ¼ã‚¿ã®é–‹å§‹è‰²ã‚’è¨­å®š
         switch (stage.startColor)
         {
             case StartColor.White:
@@ -80,17 +97,17 @@ public class StageManager : MonoBehaviour
                 break;
         }
 
-        // 5. PlayerManager ‚É“o˜^
+        // 5. PlayerManager ã«ç™»éŒ²
         playerManager.ClearPlayers();
         playerManager.AddPlayer(pc);
     }
 
     void ClearStage()
     {
-        // ƒ^ƒCƒ‹ƒ}ƒbƒv‚ğƒNƒŠƒA
+        // Tilemapã‚’ã‚¯ãƒªã‚¢
         wallTilemap.ClearAllTiles();
 
-        // Œõ‚ÌŒ‡•Ğ‚ÆƒS[ƒ‹‚ğíœ
+        // å…‰ã®ã‹ã‘ã‚‰ã¨ã‚´ãƒ¼ãƒ«ã‚’å‰Šé™¤
         foreach (var frag in GameObject.FindGameObjectsWithTag("LightFragment")) Destroy(frag);
         foreach (var goal in GameObject.FindGameObjectsWithTag("Goal")) Destroy(goal);
     }

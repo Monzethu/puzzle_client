@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-    public enum StartColor
-    {
-        White, // ”’iRGB‘S•”ONj
-        Red,   // Ô
-        Green, // —Î
-        Blue   // Â
-    }
+// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®é–‹å§‹è‰²ã‚’è¡¨ã™åˆ—æŒ™å‹
+public enum StartColor
+{
+    White, // ç™½ï¼ˆRGBã™ã¹ã¦ONï¼‰
+    Red,   // èµ¤
+    Green, // ç·‘
+    Blue   // é’
+}

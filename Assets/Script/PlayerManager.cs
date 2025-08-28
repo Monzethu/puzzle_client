@@ -23,31 +23,36 @@ public class PlayerManager : MonoBehaviour
 
         foreach (var p in players)
         {
+            if (p == null)
+            {
+                Debug.LogError("PlayerColorãŒnullã§ã™");
+                continue;
+            }
             p.Move(input);
         }
     }
 
-    // ƒvƒŒƒCƒ„[•ª—£‚ÉŒÄ‚Ô
+    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’åˆ†å‰²ã™ã‚‹
     public void SplitPlayer(PlayerColor origin, string colorToSplit)
     {
         bool r = origin.hasR;
         bool g = origin.hasG;
         bool b = origin.hasB;
 
-        // •ª—£F¬•ª‚¾‚¯æ‚èo‚µ
+        // åˆ†å‰²ã™ã‚‹è‰²ã‚’æŒã£ã¦ã„ã‚‹ã‹åˆ¤å®š
         bool splitR = (colorToSplit == "R") && origin.hasR;
         bool splitG = (colorToSplit == "G") && origin.hasG;
         bool splitB = (colorToSplit == "B") && origin.hasB;
 
-        if (!splitR && !splitG && !splitB) return; // ‚Á‚Ä‚È‚¯‚ê‚Î–³‹
+        if (!splitR && !splitG && !splitB) return; // åˆ†å‰²ã§ããªã„å ´åˆã¯çµ‚äº†
 
-        // Œ³‚ÌƒvƒŒƒCƒ„[‚©‚ç•ª—£F‚ğí‚é
+        // å…ƒã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‹ã‚‰åˆ†å‰²ã—ãŸè‰²ã‚’å¤–ã™
         if (splitR) origin.hasR = false;
         if (splitG) origin.hasG = false;
         if (splitB) origin.hasB = false;
         origin.SetColor(origin.hasR, origin.hasG, origin.hasB);
 
-        // V‚µ‚¢ƒvƒŒƒCƒ„[¶¬i•ª—£F‚¾‚¯‚Âj
+        // æ–°ã—ã„ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’ç”Ÿæˆï¼ˆåˆ†å‰²ã—ãŸè‰²ã®ã¿æŒã¤ï¼‰
         GameObject newPObj = Instantiate(origin.gameObject, origin.transform.position + new Vector3(0, -1, 0), Quaternion.identity);
         PlayerColor newPC = newPObj.GetComponent<PlayerColor>();
         newPC.SetColor(splitR, splitG, splitB);

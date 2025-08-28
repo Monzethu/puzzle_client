@@ -860,7 +860,7 @@ GameObject:
   - component: {fileID: 997362363}
   m_Layer: 0
   m_Name: Goal
-  m_TagString: finish
+  m_TagString: goal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -5,7 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - trap
-  - finish
+  - LightFragment
+  - Goal
   layers:
   - Default
   - TransparentFX

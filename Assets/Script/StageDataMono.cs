@@ -2,26 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StageDataMono : MonoBehaviour
+public class StageDataMono : MonoBehaviour// ã‚¹ãƒ†ãƒ¼ã‚¸ãƒ‡ãƒ¼ã‚¿è¨­å®š
 {
     [System.Serializable]
     public class WallInfo
     {
         public Vector3Int position;
-        public string color; // "R","G","B"
+        public enum WallColor
+        {
+            R,
+            G,
+            B
+        }
+
+        public WallColor wallColor;
     }
 
     [System.Serializable]
     public class StageData
     {
-        public Vector3Int playerStartPos;   // ƒvƒŒƒCƒ„[ŠJnˆÊ’u
-        public Vector3Int goalPos;          // ƒS[ƒ‹ˆÊ’u
-        public StageDataMono.WallInfo[] walls; // •Çî•ñ
-        public Vector3Int[] lightFragments; // Œõ‚ÌŒ‡•Ğ‚ÌˆÊ’u
+        public Vector3Int playerStartPos;
+        public Vector3Int goalPos;
+        public WallInfo[] walls;
+        public Vector3Int[] lightFragments;
 
-        //ƒCƒ“ƒXƒyƒNƒ^[‚ÅF‚ğ‘I‘ğ
-        public StartColor startColor = StartColor.White;
+        public StartColor startColor;
     }
 
-
+    public StageData stageData;
 }

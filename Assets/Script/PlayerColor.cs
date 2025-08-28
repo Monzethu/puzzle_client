@@ -32,7 +32,7 @@ public class PlayerColor : MonoBehaviour
 
     bool CanMove(Vector2 pos)
     {
-        // ï«îªíËÅiColorWallÅj
+        // Â£ÅÔºàColorWallÔºâÂà§ÂÆö
         Collider2D hit = Physics2D.OverlapCircle(pos, 0.3f, LayerMask.GetMask("Wall"));
         if (hit != null)
         {
@@ -45,10 +45,10 @@ public class PlayerColor : MonoBehaviour
         return true;
     }
 
-    bool MatchesColor(string color)
+    bool MatchesColor(ColorWall.WallColor color)
     {
-        return (color == "R" && hasR) ||
-               (color == "G" && hasG) ||
-               (color == "B" && hasB);
+        return (color == ColorWall.WallColor.R && hasR) ||
+               (color == ColorWall.WallColor.G && hasG) ||
+               (color == ColorWall.WallColor.B && hasB);
     }
 }
