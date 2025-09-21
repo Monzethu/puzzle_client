@@ -1,33 +1,30 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class StageDataMono : MonoBehaviour// ã‚¹ãƒ†ãƒ¼ã‚¸ãƒ‡ãƒ¼ã‚¿è¨­å®š
+[System.Serializable]
+public class WallInfo
 {
-    [System.Serializable]
-    public class WallInfo
-    {
-        public Vector3Int position;
-        public enum WallColor
-        {
-            R,
-            G,
-            B
-        }
+    public Vector3 position;
+    public PlayerColorType wallColor;
+}
 
-        public WallColor wallColor;
-    }
+[System.Serializable]
+public class ShardInfo
+{
+    public Vector2 position;
+    public ShardColorType shardColor;
+}
 
-    [System.Serializable]
-    public class StageData
-    {
-        public Vector3Int playerStartPos;
-        public Vector3Int goalPos;
-        public WallInfo[] walls;
-        public Vector3Int[] lightFragments;
 
-        public StartColor startColor;
-    }
+[System.Serializable]
+public class StageData
+{
+    public Vector3 playerStartPos;       // ƒvƒŒƒCƒ„[‰ŠúˆÊ’u
+    public Vector3 goalPos;              // ƒS[ƒ‹ˆÊ’u
+    public WallInfo[] colorWalls;        // F•t‚«•Ç‚Ìî•ñ
+    public ShardInfo[] lightShards;      // LightShard‚Ìî•ñ
+}
 
+public class StageDataMono : MonoBehaviour
+{
     public StageData stageData;
 }

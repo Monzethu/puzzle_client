@@ -1,114 +1,66 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
-using static StageDataMono;
 
-public class StageManager : MonoBehaviour// ステージ情報（壁の色とか）
+public class StageManager : MonoBehaviour
 {
-    public Tilemap wallTilemap;
-    public TileBase redWallTile, greenWallTile, blueWallTile;
-    public GameObject lightFragmentPrefab;
-    public GameObject goalPrefab;
+    public StageDataMono stageDataMono;
     public GameObject playerPrefab;
+    public GameObject wallPrefab;
+    public GameObject lightShardPrefab;
+    public GameObject goalPrefab;
 
-    public StageDataMono[] stages;
-    private int currentStage = 0;
-
-    public PlayerManager playerManager;
+    private PlayerManager playerManager;
 
     void Start()
     {
-        if (stages.Length > 0)
-        {
-            LoadStage(0); // 最初のステージを読み込み
-        }
+        playerManager = FindObjectOfType<PlayerManager>();
+        LoadStage();
     }
 
-    public void LoadStage(int stageNum)
+    void LoadStage()
     {
-        //Debug.Log("wallTilemap: " + wallTilemap);
-        //Debug.Log("playerPrefab: " + playerPrefab);
-        //Debug.Log("goalPrefab: " + goalPrefab);
-        //Debug.Log("lightFragmentPrefab: " + lightFragmentPrefab);
-        //Debug.Log("playerManager: " + playerManager);
+        if (stageDataMono == null || stageDataMono.stageData == null) return;
+        var stage = stageDataMono.stageData;
 
-        ClearStage();
-
-        StageDataMono stageMono = stages[stageNum];
-        StageDataMono.StageData stage = stageMono.stageData;
-
-        // 1. 壁をTilemapに配置
-        foreach (var w in stage.walls)
+        // プレイヤー
+        GameObject playerObj = Instantiate(playerPrefab, stage.playerStartPos, Quaternion.identity);
+        var pc = playerObj.GetComponent<PlayerColor>();
+        if (pc != null)
         {
-            TileBase tile = null;
-            switch (w.wallColor)
+            pc.SetManager(playerManager);
+            playerManager.AddPlayer(pc);
+        }
+
+        // 壁
+        foreach (var wall in stage.colorWalls)
+        {
+            var wallObj = Instantiate(wallPrefab, wall.position, Quaternion.identity);
+            var cw = wallObj.GetComponent<ColorWall>();
+            if (cw != null) cw.wallColor = wall.wallColor;
+        }
+
+        // LightShard
+        int shardCount = 0;
+        foreach (var shard in stage.lightShards)
+        {
+            GameObject shardObj = Instantiate(lightShardPrefab, shard.position, Quaternion.identity);
+            var shardComp = shardObj.GetComponent<LightShard>();
+            if (shardComp != null)
             {
-                case StageDataMono.WallInfo.WallColor.R:
-                    tile = redWallTile;
-                    break;
-                case StageDataMono.WallInfo.WallColor.G:
-                    tile = greenWallTile;
-                    break;
-                case StageDataMono.WallInfo.WallColor.B:
-                    tile = blueWallTile;
-                    break;
+                // ←ここで色を指定
+                shardComp.SetShardColor(shard.shardColor);
             }
-            if (tile != null) wallTilemap.SetTile(w.position, tile);
+            shardCount++;
         }
 
 
-        // 2. 光のかけらを配置
-        foreach (var pos in stage.lightFragments)
+        // Goal
+        GameObject goalObj = Instantiate(goalPrefab, stage.goalPos, Quaternion.identity);
+        var goalComp = goalObj.GetComponent<Goal>();
+
+        if (GameManager.Instance != null)
         {
-            Instantiate(lightFragmentPrefab,
-                wallTilemap.CellToWorld(pos) + new Vector3(0.5f, 0.5f, 0),
-                Quaternion.identity);
+            GameManager.Instance.goal = goalComp;
+            GameManager.Instance.SetTotalShards(shardCount);
         }
-
-        // 3. ゴールを配置
-        Instantiate(goalPrefab,
-            wallTilemap.CellToWorld(stage.goalPos) + new Vector3(0.5f, 0.5f, 0),
-            Quaternion.identity);
-
-        // 4. プレイヤー配置
-        GameObject playerObj = Instantiate(
-            playerPrefab,
-            wallTilemap.CellToWorld(stage.playerStartPos) + new Vector3(0.5f, 0.5f, 0),
-            Quaternion.identity
-        );
-
-        PlayerColor pc = playerObj.GetComponent<PlayerColor>();
-
-        // ステージデータの開始色を設定
-        switch (stage.startColor)
-        {
-            case StartColor.White:
-                pc.SetColor(true, true, true);
-                break;
-            case StartColor.Red:
-                pc.SetColor(true, false, false);
-                break;
-            case StartColor.Green:
-                pc.SetColor(false, true, false);
-                break;
-            case StartColor.Blue:
-                pc.SetColor(false, false, true);
-                break;
-        }
-
-        // 5. PlayerManager に登録
-        playerManager.ClearPlayers();
-        playerManager.AddPlayer(pc);
-    }
-
-    void ClearStage()
-    {
-        // Tilemapをクリア
-        wallTilemap.ClearAllTiles();
-
-        // 光のかけらとゴールを削除
-        foreach (var frag in GameObject.FindGameObjectsWithTag("LightFragment")) Destroy(frag);
-        foreach (var goal in GameObject.FindGameObjectsWithTag("Goal")) Destroy(goal);
     }
 }

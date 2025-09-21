@@ -2,42 +2,31 @@ using UnityEngine;
 
 public class ColorWall : MonoBehaviour
 {
-    public enum WallColor { R, G, B }
-    public WallColor wallColor;
-    //public StageDataMono.WallInfo.WallColor wallColor;
+    public PlayerColorType wallColor;
 
-    private Collider2D col;
-
-    void Start()
+    private void Start()
     {
-        col = GetComponent<Collider2D>();
+        UpdateWallColor();
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
+    // Inspector‚Å’l‚ð•Ï‚¦‚½‚Æ‚«‚É‚à‘¦”½‰f‚³‚¹‚é
+    private void OnValidate()
     {
-        PlayerColor pc = collision.gameObject.GetComponent<PlayerColor>();
-        if (pc != null)
+        UpdateWallColor();
+    }
+
+    public void UpdateWallColor()
+    {
+        var sr = GetComponent<SpriteRenderer>();
+        if (sr != null)
         {
-            // å£ã®è‰²ã¨ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®è‰²ã‚’ãƒã‚§ãƒƒã‚¯
-            bool canPass = false;
-            switch (wallColor)
+            sr.color = wallColor switch
             {
-                case WallColor.R: canPass = !pc.hasR; break;
-                case WallColor.G: canPass = !pc.hasG; break;
-                case WallColor.B: canPass = !pc.hasB; break;
-            }
-
-            // é€šã‚Œã‚‹ãªã‚‰ä¸€æ™‚çš„ã«Colliderã‚’ç„¡åŠ¹åŒ–
-            if (canPass)
-            {
-                col.enabled = false;
-                Invoke(nameof(EnableCollider), 0.2f); // ã™ãæˆ»ã™
-            }
+                PlayerColorType.Red => Color.red,
+                PlayerColorType.Green => Color.green,
+                PlayerColorType.Blue => Color.blue,
+                _ => Color.white
+            };
         }
-    }
-
-    void EnableCollider()
-    {
-        col.enabled = true;
     }
 }

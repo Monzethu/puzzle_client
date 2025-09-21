@@ -1,30 +1,49 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject gameOverText;
-    public GameObject gameClearText;
-    public GameObject next;
-    public GameObject restart;
-    public GameObject home;
+    public static GameManager Instance;
+    public Goal goal;
 
-    public void GameOver()
+    private int totalShards = 0;
+    private int collectedShards = 0;
+
+    void Awake()
     {
-        gameOverText.SetActive(true);
-        restart.SetActive(true);
-        home.SetActive(true);
-        //audioSource.PlayOneShot(gameOverSE);
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
+    }
 
+    public void SetTotalShards(int count)
+    {
+        totalShards = count;
+        collectedShards = 0;
+        goal?.LockGoal();
+    }
+
+    public void OnShardCollected()
+    {
+        collectedShards++;
+        if (collectedShards >= totalShards)
+        {
+            if (goal != null)
+            {
+                goal.gameObject.SetActive(true);
+                goal.UnlockGoal();
+            }
+        }
     }
 
     public void GameClear()
     {
-        gameClearText.SetActive(true);
-        next.SetActive(true);
-        home.SetActive(true);
-        //audioSource.PlayOneShot(gameClearSE);
+        Debug.Log("[GameManager] Game Clear!");
+        // リザルト画面や次ステージ呼び出し
+    }
+
+    public void GameOver()
+    {
+        Debug.Log("[GameManager] Game Over!");
+        // リスタート処理
     }
 }

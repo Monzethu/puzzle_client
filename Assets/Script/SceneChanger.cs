@@ -1,13 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class SceneChanger : MonoBehaviour // シーン切替用スクリプト
+/// <summary>
+/// シーン切り替え用
+/// </summary>
+public class SceneChanger : MonoBehaviour
 {
     public void ChangeScene(string sceneName)
     {
-        // sceneNameに指定したシーンに切り替える
         SceneManager.LoadScene(sceneName);
     }
 }
