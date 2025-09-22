@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -8,6 +9,12 @@ public class GameManager : MonoBehaviour
 
     private int totalShards = 0;
     private int collectedShards = 0;
+
+    [SerializeField] GameObject GameOverText;
+    [SerializeField] GameObject GameClearText;
+    [SerializeField] GameObject Next;
+    [SerializeField] GameObject Home;
+    [SerializeField] GameObject Restart;
 
     void Awake()
     {
@@ -39,11 +46,18 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("[GameManager] Game Clear!");
         // リザルト画面や次ステージ呼び出し
+        GameClearText.SetActive(true);
+        Next.SetActive(true );
+        Home.SetActive(true);
     }
 
     public void GameOver()
     {
         Debug.Log("[GameManager] Game Over!");
         // リスタート処理
+        GameOverText.SetActive(true);
+        Next.SetActive(true);
+        Home.SetActive(true);
+        Restart.SetActive(true);
     }
 }

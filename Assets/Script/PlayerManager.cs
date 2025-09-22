@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerManager : MonoBehaviour
 {
+    [SerializeField]GameManager gameManager;
+
     private List<PlayerColor> players = new List<PlayerColor>();
     private Vector2 inputDir;
 
@@ -58,7 +61,7 @@ public class PlayerManager : MonoBehaviour
 
         if (allReached)
         {
-            GameManager.Instance.GameClear();
+            gameManager.GameClear();
         }
     }
 
@@ -71,4 +74,6 @@ public class PlayerManager : MonoBehaviour
         }
         players.Clear();
     }
+
+
 }

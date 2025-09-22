@@ -11,6 +11,15 @@ public class Goal : MonoBehaviour
         LockGoal();
     }
 
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            Debug.Log("ステージクリア！");
+            //ShowResult();
+        }
+    }
+
     public void LockGoal()
     {
         if (sr != null) sr.color = new Color(1f, 1f, 1f, 0.3f);

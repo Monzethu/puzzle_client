@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class StageManager : MonoBehaviour
 {
+    public static StageManager Instance { get; private set; }
+
     public StageDataMono stageDataMono;
     public GameObject playerPrefab;
     public GameObject wallPrefab;
@@ -9,6 +11,17 @@ public class StageManager : MonoBehaviour
     public GameObject goalPrefab;
 
     private PlayerManager playerManager;
+    //private int currentStageIndex = 0;
+
+    void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+    }
 
     void Start()
     {
@@ -51,7 +64,6 @@ public class StageManager : MonoBehaviour
             }
             shardCount++;
         }
-
 
         // Goal
         GameObject goalObj = Instantiate(goalPrefab, stage.goalPos, Quaternion.identity);
